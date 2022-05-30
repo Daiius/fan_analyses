@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "Meshing duct..."
+cartesian2DMesh -case cases/static &>> cases/static/log.mesh
+
+echo "Meshing fan..."
+cartesian2DMesh -case cases/fan    &>> cases/fan/log.mesh
+
+echo "Merging duct & fan meshes..."
+cp -r cases/static cases/all
+mergeMeshes -overwrite cases/all cases/fan &>> cases/all/log.mesh
+
+echo "Copying merged mesh into constant/polyMesh..."
+cp -r cases/all/constant/polyMesh constant/.
+
+echo "Scaling mesh..."
+transformPoints -scale '(1e-3 1e-3 1e-3)' &>> log.mesh
+
+echo "Running createPatch..."
+createPatch -overwrite &>> log.mesh
+
+echo "Copying 0.orig..."
+rm -r 0
+cp -r 0.orig 0
+
+echo "Starting pimpleFoam (background)"
+pimpleFoam &>> log.pimpleFoam &
+
+echo "Running pimpleFoam by Process Id: " $!
+
