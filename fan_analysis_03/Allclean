@@ -1,0 +1,16 @@
+#!/bin/bash
+
+rm log.*
+
+foamCleanPolyMesh
+rm -r $(foamListTimes)
+rm -r 0
+
+rm -r cases/all
+rm cases/static/log.*
+rm cases/fan/log.*
+
+foamCleanPolyMesh -case cases/static
+foamCleanPolyMesh -case cases/fan
+
+
