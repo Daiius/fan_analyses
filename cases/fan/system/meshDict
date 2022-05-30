@@ -1,0 +1,14 @@
+FoamFile
+{
+  version 2.0;
+  format  ascii;
+  class dictionary;
+  object  meshDict;
+}
+
+surfaceFile "mesh/fan.fms";
+
+minCellSize 0.24;
+maxCellSize 0.26;
+boundaryCellSize  0.25;
+
